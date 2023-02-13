@@ -1,5 +1,5 @@
 from flask import Flask, request
-
+from flask_smorest import abort
 app = Flask(__name__)
 
 stores = [
@@ -35,7 +35,8 @@ def create_item(name):
             new_item = {"name": request_data["name"], "price": request_data["price"]}
             store["items"].append(new_item)
             return new_item, 201
-    return {"message": "Store not found"}, 404
+    abort(404, {"message": "Store not found"})
+    # return {"message": "Store not found"}, 404
 
 
 @app.get("/store/<string:name>")
@@ -43,7 +44,8 @@ def get_store(name):
     for store in stores:
         if store["name"] == name:
             return store
-    return {"message": "Store not found"}, 404
+    abort(404, {"message": "Store not found"})
+    # return {"message": "Store not found"}, 404
 
 
 @app.get("/store/<string:name>/item")
@@ -51,8 +53,9 @@ def get_item_in_store(name):
     for store in stores:
         if store["name"] == name:
             return {"items": store["items"]}
-    return {"message": "Store not found"}, 404
+    abort(404, {"message": "Store not found"})
+    # return {"message": "Store not found"}, 404
 
-# if __name__ == "__main__":
-#     app.run()
+if __name__ == "__main__":
+    app.run(host='0.0.0.0')
 
